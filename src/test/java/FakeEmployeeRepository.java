@@ -21,7 +21,6 @@ public class FakeEmployeeRepository implements EmployeeRepository {
         return e;
     }
 
-    // Lägg till denna metod
     public Employee findById(String id) {
         return employees.get(id);
     }
