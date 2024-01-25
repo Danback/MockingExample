@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class FakeEmployeeRepository implements EmployeeRepository {
-    private Map<String, Employee> employees = new HashMap<>();
+    private final Map<String, Employee> employees = new HashMap<>();
 
     @Override
     public List<Employee> findAll() {
@@ -16,6 +17,12 @@ public class FakeEmployeeRepository implements EmployeeRepository {
 
     @Override
     public Employee save(Employee e) {
-        return employees.put(e.getId(), e);
+        employees.put(e.getId(), e);
+        return e;
+    }
+
+    // Lägg till denna metod
+    public Employee findById(String id) {
+        return employees.get(id);
     }
 }

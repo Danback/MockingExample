@@ -3,8 +3,7 @@ package com.example;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.List;
@@ -42,14 +41,16 @@ class EmployeesTest {
         List<Employee> allEmployees = Arrays.asList(e1, e2);
         when(employeeRepository.findAll()).thenReturn(allEmployees);
 
+        // Anta att betalningen lyckas för den första anställda och misslyckas för den andra
         doNothing().when(bankService).pay(e1.getId(), e1.getSalary());
         doThrow(new RuntimeException("Payment failed")).when(bankService).pay(e2.getId(), e2.getSalary());
 
-        employees.payEmployees();
+        int payments = employees.payEmployees();
 
-        verify(bankService).pay(e1.getId(), e1.getSalary());
-        verify(bankService).pay(e2.getId(), e2.getSalary());
+        verify(bankService).pay(e1.getId(), e1.getSalary()); // Verifierar att bankService.pay kallas för e1
+        verify(bankService).pay(e2.getId(), e2.getSalary()); // Försöker kalla bankService.pay för e2, men kastar ett undantag
         assertTrue(e1.isPaid());
         assertFalse(e2.isPaid());
+        assertEquals(1, payments); // Endast en anställd fick betalt
     }
 }
